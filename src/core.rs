@@ -14,12 +14,9 @@ impl Environment {
         }
 
         let value = value.unwrap();
-        let parsed_value = T::from_str(&value);
-
-        if let Ok(t) = parsed_value {
-            t
-        } else {
-            panic!("Couldn't parse `{var_name}` = {value}")
+        match T::from_str(&value) {
+            Ok(t) => t,
+            Err(_) => panic!("Couldn't parse `{var_name}` = {value}"),
         }
     }
 }
