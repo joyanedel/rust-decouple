@@ -9,9 +9,9 @@
 #[macro_export]
 macro_rules! config {
     ($var_name:expr, $default_value:expr) => {
-        Environment::from($var_name, Some($default_value))
+        rust_decouple::core::Environment::from($var_name, Some($default_value))
     };
     ($var_name:expr) => {
-        Environment::from($var_name, None)
+        rust_decouple::core::Environment::from($var_name, None)
     };
 }
