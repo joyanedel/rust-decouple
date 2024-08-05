@@ -1,7 +1,12 @@
 [package]
 name = "rust-decouple"
+description = "A simple library to ease the process of parsing environment variables"
+readme = "README.md"
+license = "MIT"
+keywords = ["config"]
 authors = ["joyanedel <iamjoyanedel@gmail.com>"]
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.80.0"
 
 [dependencies]
