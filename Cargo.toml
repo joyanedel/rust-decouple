@@ -5,7 +5,8 @@ readme = "README.md"
 license = "MIT"
 keywords = ["config"]
 authors = ["joyanedel <iamjoyanedel@gmail.com>"]
-version = "0.1.0"
+repository = "https://github.com/joyanedel/rust-decouple"
+version = "0.1.1"
 edition = "2021"
 rust-version = "1.80.0"
 

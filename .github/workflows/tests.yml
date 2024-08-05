@@ -1,6 +1,8 @@
-name: Rust
+name: Tests 🧪
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -14,7 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
+    - name: 📦 Build
       run: cargo build --verbose
-    - name: Run tests
+    - name: 🧪 Run tests
       run: cargo test --verbose
