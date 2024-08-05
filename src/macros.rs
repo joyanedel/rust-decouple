@@ -18,7 +18,7 @@ macro_rules! config {
 
 /// Macro for Vector environment parser
 /// ## Usage
-/// /// ```rs
+/// ```rs
 /// let variable: Vec<u8> = config!("VEC_U8_VAR");
 /// let variable_with_default: Vec<i32> = config!("NOT_DEFINED_I32_VAR", vec![]);
 /// // Automatically inferred that `variable_with_default_and_type_inferred` is u8 due to the default value
