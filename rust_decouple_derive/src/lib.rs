@@ -1,12 +1,11 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput, Type};
+use syn::{parse_macro_input, DeriveInput};
 
 #[proc_macro_derive(EnvVarParser)]
 pub fn derive_env_var_parser(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     let name = &input.ident;
-    let name_str = name.to_string();
 
     let expanded = match input.data {
         syn::Data::Struct(ref data_struct) => {
@@ -24,13 +23,17 @@ pub fn derive_env_var_parser(input: TokenStream) -> TokenStream {
                 .collect();
 
             let field_names: Vec<_> = fields.iter().map(|(a, _)| a).collect();
+            let field_names_uppercase: Vec<_> = field_names
+                .iter()
+                .map(|f| f.to_string().to_uppercase())
+                .collect();
             let field_types: Vec<_> = fields.iter().map(|(_, b)| b).collect();
 
             quote! {
                 impl EnvVarParser for #name {
                     fn parse() -> Self {
                         Self {
-                            #(#field_names: <#field_types>::default(),)*
+                            #(#field_names: rust_decouple::core::Environment::from::<#field_types>(#field_names_uppercase, None),)*
                         }
                     }
                 }

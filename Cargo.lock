@@ -23,9 +23,12 @@ dependencies = [
 [[package]]
 name = "rust-decouple"
 version = "0.1.2"
+dependencies = [
+ "rust_decouple_derive",
+]
 
 [[package]]
-name = "rust-decouple-derive"
+name = "rust_decouple_derive"
 version = "0.1.0"
 dependencies = [
  "quote",

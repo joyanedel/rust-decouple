@@ -1,4 +1,5 @@
 [workspace]
+resolver = "2"
 members = ["rust_decouple_derive"]
 
 [package]
@@ -14,3 +15,4 @@ edition = "2021"
 rust-version = "1.80.0"
 
 [dependencies]
+rust_decouple_derive = { path = "rust_decouple_derive" }
