@@ -1,3 +1,6 @@
+[workspace]
+members = ["rust_decouple_derive"]
+
 [package]
 name = "rust-decouple"
 description = "A simple library to ease the process of parsing environment variables"
