@@ -1,5 +1,8 @@
 [package]
 name = "rust_decouple_derive"
+authors = ["joyanedel <iamjoyanedel@gmail.com"]
+description = "A simple library to ease the process of parsing environment variables subcrate"
+license = "MIT"
 version = "0.1.0"
 edition = "2021"
 
