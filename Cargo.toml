@@ -15,4 +15,8 @@ edition = "2021"
 rust-version = "1.80.0"
 
 [dependencies]
-rust_decouple_derive = { path = "rust_decouple_derive" }
+rust_decouple_derive = { path = "rust_decouple_derive", optional = true }
+
+[features]
+default = []
+derive = ["dep:rust_decouple_derive"]
