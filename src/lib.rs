@@ -1,6 +1,3 @@
-// #[cfg(feature = "derive")]
-// pub use rust_decouple_derive;
-
 pub mod core;
 pub mod macros;
 mod traits;
@@ -8,6 +5,6 @@ mod traits;
 #[cfg(feature = "derive")]
 extern crate rust_decouple_derive;
 #[cfg(feature = "derive")]
-pub use rust_decouple_derive::EnvVarParser;
+pub use rust_decouple_derive::Decouple;
 #[cfg(feature = "derive")]
-pub use traits::EnvVarParser;
+pub use traits::Decouple;

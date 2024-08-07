@@ -1,7 +1,7 @@
 use quote::quote;
 use syn::{parse_macro_input, DeriveInput, Ident, Type};
 
-#[proc_macro_derive(EnvVarParser)]
+#[proc_macro_derive(Decouple)]
 pub fn derive_env_var_parser(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     let name = &input.ident;
@@ -28,7 +28,7 @@ pub fn derive_env_var_parser(input: proc_macro::TokenStream) -> proc_macro::Toke
             let vec_fields = gen_fields(vec_fields);
 
             quote! {
-                impl EnvVarParser for #name {
+                impl Decouple for #name {
                     fn parse() -> Self {
                         Self {
                             #non_vec_fields
@@ -38,7 +38,7 @@ pub fn derive_env_var_parser(input: proc_macro::TokenStream) -> proc_macro::Toke
                 }
             }
         }
-        _ => panic!("#[derive(EnvVarParser)] is only defined for structs"),
+        _ => panic!("#[derive(Decouple)] is only defined for structs"),
     };
 
     expanded.into()

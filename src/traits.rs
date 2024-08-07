@@ -1,3 +1,3 @@
-pub trait EnvVarParser {
+pub trait Decouple {
     fn parse() -> Self;
 }
