@@ -9,7 +9,7 @@ impl Environment {
     pub fn from<T: FromStr>(var_name: &str, default: Option<T>) -> T {
         let value = env::var(var_name);
         if value.is_err() && default.is_none() {
-            panic!("Couldn't find `{var_name}`");
+            panic!("Couldn't find environment variable `{var_name}`");
         } else if let Some(default_value) = default {
             return default_value;
         }
@@ -71,7 +71,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Couldn't find `NOT_SET_VALUE_2`")]
+    #[should_panic(expected = "Couldn't find environment variable `NOT_SET_VALUE_2`")]
     fn parse_not_set_env_var_with_no_default_value_panics() {
         env::remove_var("NOT_SET_VALUE_2");
         Environment::from::<u8>("NOT_SET_VALUE_2", None);
