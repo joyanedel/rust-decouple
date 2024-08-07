@@ -75,9 +75,12 @@ fn main() {
 }
 ```
 
+The `Decouple` trait will automatically implement the `parse` method for your struct, this method will return a new instance of your struct with the values from the environment.
+The environment variables will be searched in uppercase and snake case, so the variable `var_1` will be searched as `VAR_1` and `var_2` as `VAR_2`.
+
 To use it, you need to enable the feature `derive` in your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-rust_decouple = { version = "0.1", features = ["derive"] }
+rust_decouple = { version = "0.2", features = ["derive"] }
 ```
