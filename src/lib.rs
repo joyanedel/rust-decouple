@@ -1,5 +1,4 @@
 pub mod core;
-pub mod macros;
 mod traits;
 
 #[cfg(feature = "derive")]
