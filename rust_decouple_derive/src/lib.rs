@@ -4,7 +4,7 @@ use syn::{parse_macro_input, DeriveInput, Ident, Type};
 #[proc_macro_derive(Decouple)]
 pub fn derive_env_var_parser(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
-    let name = &input.ident;
+    let struct_name = &input.ident;
 
     let expanded = match input.data {
         syn::Data::Struct(ref data_struct) => {
@@ -28,12 +28,13 @@ pub fn derive_env_var_parser(input: proc_macro::TokenStream) -> proc_macro::Toke
             let vec_fields = gen_fields(vec_fields);
 
             quote! {
-                impl Decouple for #name {
-                    fn parse() -> Self {
-                        Self {
+                impl Decouple for #struct_name {
+                    type Error = rust_decouple::core::FromEnvironmentError;
+                    fn parse() -> Result<Self, Self::Error> where Self: Sized {
+                        Ok(Self {
                             #non_vec_fields
                             #vec_fields
-                        }
+                        })
                     }
                 }
             }
@@ -65,11 +66,11 @@ fn gen_fields(fields: Vec<&(Ident, Type, bool)>) -> proc_macro2::TokenStream {
 
     if is_vec {
         quote! {
-            #(#field_names: rust_decouple::core::VecEnvironment::from(#field_names_uppercase, None) as #field_types,)*
+            #(#field_names: (rust_decouple::core::VecEnvironment::from(#field_names_uppercase, None) as #field_types)?,)*
         }
     } else {
         quote! {
-            #(#field_names: rust_decouple::core::Environment::from::<#field_types>(#field_names_uppercase, None),)*
+            #(#field_names: (rust_decouple::core::Environment::from::<#field_types>(#field_names_uppercase, None))?,)*
         }
     }
 }

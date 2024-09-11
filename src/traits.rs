@@ -1,3 +1,6 @@
 pub trait Decouple {
-    fn parse() -> Self;
+    type Error;
+    fn parse() -> Result<Self, Self::Error>
+    where
+        Self: Sized;
 }
