@@ -27,3 +27,15 @@ fn test_simple_struct_derive_fails() {
 
     assert!(result.is_err())
 }
+
+#[test]
+fn test_vector_env_var_in_struct() {
+    #[derive(Decouple)]
+    struct Test {
+        vec_string_env: Vec<String>,
+    }
+    env::set_var("VEC_STRING_ENV", "test_1,test_2");
+    let result = Test::parse();
+
+    assert!(result.is_ok_and(|r| r.vec_string_env == vec!["test_1".to_owned(), "test_2".to_owned()]))
+}
