@@ -10,77 +10,104 @@ The benefits of the rust version is that the cast is automatically done by the l
 
 ### Basic usage
 
-The most basic usage of the library is to get a variable from the environment, if it is not found, it will return an error.
-
-```rs
-use rust_decouple::macros::config;
-
-let my_string: String = config!("VAR_NAME");
-```
-
-You can also specify a default value if the variable is not found
-
-```rs
-use rust_decouple::macros::config;
-
-let my_string = config!("VAR_NAME", "default_value");
-```
-
-In this case, the variable type will be inferred from the default value.
-If the default value is ambiguous, you can specify the type like this:
-
-```rs
-use rust_decouple::macros::config;
-
-// The type is annotated by the user
-let my_string: u8 = config!("VAR_NAME", 8);
-
-// The type is inferred from the default value
-let my_u8 = config!("VAR_NAME", 8u8);
-```
-
-Notice that this usage of default doesn't cover the case where the variable is found but is empty or invalid.
-
-#### Vectorized environment variables
-
-You can also get a vector of values from the environment, the values should be separated by a comma without spaces in between.
-
-```rs
-use rust_decouple::macros::config_vec;
-
-let my_vec: Vec<String> = config_vec!("VAR_NAME");
-let my_vec = config_vec!("VAR_NAME", vec!["1", "2"]);
-let my_vec: Vec<u8> = config_vec!("VAR_NAME", vec![1, 2]);
-```
-
-### Derived trait
-
-You can also derive the `Decouple` trait for your structs, this will allow you to get the values from the environment in a more structured way as the example below:
+The most basic usage of the library is to define a struct with the variables you want to decouple and then call the `parse` method on it. The library will automatically try to parse the environment variables and return a struct with the values.
 
 ```rs
 use rust_decouple::Decouple;
 
 #[derive(Decouple)]
-struct Test {
-    var_1: u8,
-    var_2: Vec<i32>,
-    var_3: Vec<String>,
+struct EnvVars {
+    api_key: String,
 }
 
 fn main() {
-    let env_vars = Test::parse();
-    println!("{}", env_vars.var_1);
-    println!("{:?}", env_vars.var_2);
-    println!("{:?}", env_vars.var_3);
+    let constants = match EnvVars::parse() {
+        Ok(v) => v,
+        Err(e) => panic!("Error at parsing environment variables. Error: {e}"),
+    };
+
+    println!("My secret API KEY value is: {}", constants.api_key)
 }
 ```
 
-The `Decouple` trait will automatically implement the `parse` method for your struct, this method will return a new instance of your struct with the values from the environment.
-The environment variables will be searched in uppercase and snake case, so the variable `var_1` will be searched as `VAR_1` and `var_2` as `VAR_2`.
+If you have not set the environment variable `API_KEY`, this example program will panic with the message
+```sh
+Error at parsing environment variables. Error: Couldn't find variable `API_KEY`
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
 
-To use it, you need to enable the feature `derive` in your `Cargo.toml` file:
+Once you set the environment variable, the program will print the value of the variable. For instance, if you set the variable `API_KEY` to `123456`, the output will be:
+```sh
+My secret API KEY value is 123456
+```
 
-```toml
-[dependencies]
-rust_decouple = { version = "0.2", features = ["derive"] }
+**Note** that this crate does not provide a way to set environment variables, you should set them before running your program, and as you might have noted, the library will look for the environment variable with the same name as the struct field in uppercase.
+
+## Advanced usage
+
+### Simple default values
+
+The library also provides a way to set default values for the variables but not using procedural macros in the current version. 
+
+```rs
+use rust_decouple::core::Environment;
+
+fn main() {
+    let api_key = Environment::from("API_KEY", Some("sample_api_key".to_string()));
+
+    println!("My secret API KEY value is: {:?}", api_key)
+}
+```
+
+In this example, the library will look for the environment variable `API_KEY` and if it is not set, it will use the default
+value `sample_api_key`.
+
+One possible output of this program will be:
+```sh
+My secret API KEY value is: Ok("sample_api_key")
+```
+
+The derive macro is based in this implementation, so anything you can do with the Decouple derive macro, you can do with the Environment struct.
+
+### Vector environment variables
+
+The library also provides a way to parse environment variables as vectors. The library will look for the environment variable with the same name as the struct field in uppercase and will split the value by commas.
+
+```rs
+use rust_decouple::Decouple;
+
+#[derive(Decouple)]
+struct EnvVars {
+    api_keys: Vec<String>,
+}
+
+fn main() {
+    let constants = match EnvVars::parse() {
+        Ok(v) => v,
+        Err(e) => panic!("Error at parsing environment variables. Error: {e}"),
+    };
+
+    println!("My secret API KEYS values are: {:?}", constants.api_keys);
+}
+```
+
+If you set the environment variable `API_KEYS` to `123456,7891011`, the output will be:
+```
+My secret API KEYS values are: ["123456", "7891011"]
+```
+
+And you can do the same with the VecEnvironment struct:
+
+```rs
+use rust_decouple::core::VecEnvironment;
+
+fn main() {
+    let api_keys = VecEnvironment::from("API_KEYS", Some(vec!["sample_api_key".to_string()]));
+    println!("My secret API KEYS values are: {:?}", api_keys);
+}
+```
+
+And the output will be:
+```sh
+My secret API KEYS values are: Ok(["sample_api_key"])
 ```
