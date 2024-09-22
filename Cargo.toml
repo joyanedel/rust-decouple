@@ -10,13 +10,13 @@ license = "MIT"
 keywords = ["config"]
 authors = ["joyanedel <iamjoyanedel@gmail.com>"]
 repository = "https://github.com/joyanedel/rust-decouple"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 rust-version = "1.80.0"
 
 [dependencies]
-rust_decouple_derive = { path = "./rust_decouple_derive", optional = true, version = "0.1.0" }
+rust_decouple_derive = { path = "./rust_decouple_derive", optional = true, version = "0.2.0" }
 
 [features]
-default = []
+default = ["derive"]
 derive = ["dep:rust_decouple_derive"]
